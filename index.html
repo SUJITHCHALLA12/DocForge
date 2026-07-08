@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DocForge</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="rail" aria-label="Primary">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">DF</span>
+          <div>
+            <strong>DocForge</strong>
+            <span>Scanner Studio</span>
+          </div>
+        </div>
+        <nav class="nav-list" aria-label="Workspace pages">
+          <button class="nav-item active" data-route="capture" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+            <span>Capture</span>
+          </button>
+          <button class="nav-item" data-route="library" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 14l2.2-2.2 2.8 3.1 1.8-1.8L18 17H6z"/></svg>
+            <span>Gallery</span>
+          </button>
+          <button class="nav-item" data-route="editor" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5z"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+            <span>Format</span>
+          </button>
+          <button class="nav-item" data-route="merge" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v6H7z"/><path d="M5 11h10v6H5z"/><path d="M9 3h10v6H9z"/></svg>
+            <span>Merge</span>
+          </button>
+          <button class="nav-item" data-route="convert" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h7l3 3v7H7z"/><path d="M14 7v3h3"/><path d="M6 17l-2-2 2-2"/><path d="M18 13l2 2-2 2"/></svg>
+            <span>Convert</span>
+          </button>
+          <button class="nav-item" data-route="pdftools" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/></svg>
+            <span>PDF Tools</span>
+          </button>
+          <button class="nav-item" data-route="export" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 19h14"/></svg>
+            <span>Download</span>
+          </button>
+        </nav>
+        <div class="storage-card">
+          <span>Session photos</span>
+          <strong id="railCount">0</strong>
+          <small>No fixed photo limit. Your browser memory is the practical limit.</small>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Document formatting and conversion suite</p>
+            <h1 id="pageTitle">Capture HD document photos</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="icon-button" id="clearAllBtn" type="button" title="Clear session" aria-label="Clear session">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 11v6M14 11v6"/><path d="M9 7l1-3h4l1 3"/><path d="M7 7l1 14h8l1-14"/></svg>
+            </button>
+            <button class="primary-action" id="quickExportBtn" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 19h14"/></svg>
+              Build PDF
+            </button>
+          </div>
+        </header>
+
+        <section class="screen active" id="captureScreen" data-screen="capture">
+          <div class="capture-layout">
+            <section class="camera-panel">
+              <div class="camera-stage">
+                <video id="cameraVideo" autoplay playsinline muted></video>
+                <canvas id="snapshotCanvas" hidden></canvas>
+                <div class="scan-frame" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="camera-placeholder" id="cameraPlaceholder">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+                  <strong>Camera preview</strong>
+                  <span>Start the camera or import photos from your gallery.</span>
+                </div>
+              </div>
+              <div class="camera-controls">
+                <button class="tool-button" id="startCameraBtn" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+                  Camera
+                </button>
+                <button class="capture-button" id="captureBtn" type="button" disabled aria-label="Capture photo"></button>
+                <button class="tool-button sequence-button" id="sequenceCaptureBtn" type="button" disabled>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h8v14H8z"/><path d="M4 8h3v8H4z"/><path d="M17 8h3v8h-3z"/></svg>
+                  Sequence
+                </button>
+                <label class="tool-button file-button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 14l2.5-2.5 3 3L15 13l3 4H6z"/></svg>
+                  Gallery
+                  <input id="fileInput" type="file" accept="image/*" multiple>
+                </label>
+              </div>
+              <p class="status-line" id="cameraStatus">Camera is idle.</p>
+            </section>
+
+            <section class="settings-panel">
+              <h2>Scan profile</h2>
+              <div class="field-grid">
+                <label>
+                  <span>Quality</span>
+                  <select id="qualitySelect">
+                    <option value="0.95">HD document</option>
+                    <option value="0.88">Balanced</option>
+                    <option value="0.78">Compact</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Enhancement</span>
+                  <select id="filterSelect">
+                    <option value="doc">Document scanner</option>
+                    <option value="gray">Grayscale</option>
+                    <option value="sharp">Sharp color</option>
+                    <option value="none">Original</option>
+                  </select>
+                </label>
+                <label>
+                  <span>PDF page</span>
+                  <select id="pageSizeSelect">
+                    <option value="a4">A4</option>
+                    <option value="letter">Letter</option>
+                    <option value="image">Image size</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Fit mode</span>
+                  <select id="fitSelect">
+                    <option value="contain">Fit whole page</option>
+                    <option value="cover">Fill page</option>
+                  </select>
+                </label>
+              </div>
+              <div class="switch-row">
+                <label class="switch">
+                  <input id="autoEnhanceToggle" type="checkbox" checked>
+                  <span></span>
+                  Auto-enhance new photos
+                </label>
+                <label class="switch">
+                  <input id="dateStampToggle" type="checkbox">
+                  <span></span>
+                  Add capture date to PDF
+                </label>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="screen" id="libraryScreen" data-screen="library">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Photo intake</p>
+              <h2>Gallery and captured pages</h2>
+            </div>
+            <label class="secondary-action">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              Add photos
+              <input id="libraryFileInput" type="file" accept="image/*" multiple>
+            </label>
+          </div>
+          <div class="photo-grid" id="photoGrid"></div>
+          <div class="empty-state" id="libraryEmpty">
+            <strong>No photos yet</strong>
+            <span>Capture documents with the camera or choose files from your gallery.</span>
+          </div>
+        </section>
+
+        <section class="screen" id="editorScreen" data-screen="editor">
+          <div class="editor-layout">
+            <aside class="thumb-strip" id="thumbStrip" aria-label="Pages"></aside>
+            <section class="editor-preview">
+              <canvas id="editCanvas"></canvas>
+              <div class="empty-state" id="editorEmpty">
+                <strong>Select a photo</strong>
+                <span>Photos added in Capture or Gallery appear here for formatting.</span>
+              </div>
+            </section>
+            <aside class="edit-tools">
+              <h2>Format page</h2>
+              <div class="tool-grid">
+                <button class="icon-tool" id="rotateLeftBtn" type="button" title="Rotate left" aria-label="Rotate left"><svg viewBox="0 0 24 24"><path d="M7 7h7a5 5 0 1 1-5 5"/><path d="M7 3v4h4"/></svg></button>
+                <button class="icon-tool" id="rotateRightBtn" type="button" title="Rotate right" aria-label="Rotate right"><svg viewBox="0 0 24 24"><path d="M17 7h-7a5 5 0 1 0 5 5"/><path d="M17 3v4h-4"/></svg></button>
+                <button class="icon-tool" id="cropBtn" type="button" title="Auto crop" aria-label="Auto crop"><svg viewBox="0 0 24 24"><path d="M6 3v15h15"/><path d="M3 6h15v15"/></svg></button>
+                <button class="icon-tool" id="removeSelectedBtn" type="button" title="Delete page" aria-label="Delete page"><svg viewBox="0 0 24 24"><path d="M5 7h14"/><path d="M10 11v6M14 11v6"/><path d="M9 7l1-3h4l1 3"/><path d="M7 7l1 14h8l1-14"/></svg></button>
+              </div>
+              <label class="range-field">
+                <span>Brightness</span>
+                <input id="brightnessRange" type="range" min="70" max="140" value="108">
+              </label>
+              <label class="range-field">
+                <span>Contrast</span>
+                <input id="contrastRange" type="range" min="80" max="180" value="132">
+              </label>
+              <label class="range-field">
+                <span>Sharpness</span>
+                <input id="sharpnessRange" type="range" min="0" max="40" value="12">
+              </label>
+              <div class="segmented" role="group" aria-label="Page tone">
+                <button class="active" data-filter-choice="doc" type="button">Doc</button>
+                <button data-filter-choice="gray" type="button">Gray</button>
+                <button data-filter-choice="none" type="button">Color</button>
+              </div>
+              <button class="primary-action full" id="applyFormatBtn" type="button">Apply to selected</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="screen" id="mergeScreen" data-screen="merge">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Page sequence</p>
+              <h2>Arrange, merge and prepare</h2>
+            </div>
+            <div class="button-row">
+              <button class="secondary-action" id="sortNameBtn" type="button">Sort by name</button>
+              <button class="secondary-action" id="reverseBtn" type="button">Reverse</button>
+            </div>
+          </div>
+          <div class="merge-board" id="mergeBoard"></div>
+          <div class="empty-state" id="mergeEmpty">
+            <strong>No pages to merge</strong>
+            <span>Add photos first, then drag pages into the order you want.</span>
+          </div>
+        </section>
+
+        <section class="screen" id="convertScreen" data-screen="convert">
+          <div class="converter-layout">
+            <section class="converter-panel">
+              <div class="section-heading compact">
+                <div>
+                  <p class="eyebrow">Universal converter</p>
+                  <h2>Convert documents and files</h2>
+                </div>
+              </div>
+              <label class="drop-zone" id="converterDropZone">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+                <strong id="converterFileName">Choose a file</strong>
+                <span>Images, PDF, TXT, Markdown, HTML, CSV, JSON, RTF, DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, EPUB and more.</span>
+                <input id="converterFileInput" type="file">
+              </label>
+              <div class="convert-grid">
+                <label>
+                  <span>Detected input</span>
+                  <input id="converterFromInput" type="text" value="No file selected" readonly>
+                </label>
+                <label>
+                  <span>Convert to</span>
+                  <select id="converterToSelect">
+                    <optgroup label="Local browser converters">
+                      <option value="pdf">PDF document (.pdf)</option>
+                      <option value="txt">Plain text (.txt)</option>
+                      <option value="html">HTML document (.html)</option>
+                      <option value="md">Markdown (.md)</option>
+                      <option value="rtf">Rich Text Format (.rtf)</option>
+                      <option value="doc">Word-compatible document (.doc)</option>
+                      <option value="xls">Excel-compatible sheet (.xls)</option>
+                      <option value="json">JSON data (.json)</option>
+                      <option value="csv">CSV spreadsheet (.csv)</option>
+                      <option value="png">PNG image (.png)</option>
+                      <option value="jpg">JPEG image (.jpg)</option>
+                      <option value="webp">WebP image (.webp)</option>
+                    </optgroup>
+                    <optgroup label="Needs server conversion engine">
+                      <option value="docx">Microsoft Word (.docx)</option>
+                      <option value="xlsx">Microsoft Excel (.xlsx)</option>
+                      <option value="pptx">Microsoft PowerPoint (.pptx)</option>
+                      <option value="odt">OpenDocument Text (.odt)</option>
+                      <option value="ods">OpenDocument Sheet (.ods)</option>
+                      <option value="odp">OpenDocument Presentation (.odp)</option>
+                      <option value="epub">EPUB ebook (.epub)</option>
+                    </optgroup>
+                  </select>
+                </label>
+              </div>
+              <div class="button-row">
+                <button class="primary-action" id="convertFileBtn" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h7l3 3v7H7z"/><path d="M14 7v3h3"/><path d="M6 17l-2-2 2-2"/><path d="M18 13l2 2-2 2"/></svg>
+                  Convert
+                </button>
+                <button class="secondary-action" id="sendToScannerBtn" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+                  Add image to scanner
+                </button>
+              </div>
+              <p class="status-line" id="converterStatus">Select a file to see available conversion options.</p>
+            </section>
+            <section class="converter-panel">
+              <h2>Format coverage</h2>
+              <div class="format-matrix">
+                <div>
+                  <strong>Runs locally now</strong>
+                  <span>JPG, PNG, WebP, GIF, SVG, TXT, Markdown, HTML, CSV, JSON, RTF output, DOC-compatible output, XLS-compatible output, PDF creation.</span>
+                </div>
+                <div>
+                  <strong>Server engine needed</strong>
+                  <span>DOCX, XLSX, PPTX, ODT, ODS, ODP, EPUB, PDF text extraction, PDF to Word, OCR, password-protected files, exact layout preservation.</span>
+                </div>
+                <div>
+                  <strong>Database optional</strong>
+                  <span>No database is required for one-off browser conversion. Add Supabase or Firebase only for login, saved files, history, sharing, sync, or background conversion jobs.</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="screen" id="pdfToolsScreen" data-screen="pdftools">
+          <div class="pdf-tools-layout">
+            <section class="pdf-panel">
+              <div class="section-heading compact">
+                <div>
+                  <p class="eyebrow">PDF workstation</p>
+                  <h2>Organize, split, extract and compress</h2>
+                </div>
+              </div>
+              <label class="drop-zone pdf-drop-zone" id="pdfDropZone">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 13h4M10 17h3"/></svg>
+                <strong id="pdfFileName">Load a PDF</strong>
+                <span>Reorder, rotate, remove, extract, split, watermark, number pages, or raster-compress.</span>
+                <input id="pdfFileInput" type="file" accept="application/pdf,.pdf">
+              </label>
+              <div class="pdf-options">
+                <label>
+                  <span>Output name</span>
+                  <input id="pdfOutputNameInput" type="text" value="edited-document.pdf">
+                </label>
+                <label>
+                  <span>Watermark</span>
+                  <input id="pdfWatermarkInput" type="text" placeholder="Optional watermark text">
+                </label>
+                <label>
+                  <span>Compression quality</span>
+                  <select id="pdfQualitySelect">
+                    <option value="0.72">Balanced</option>
+                    <option value="0.55">Small file</option>
+                    <option value="0.9">High quality</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Raster scale</span>
+                  <select id="pdfRasterScaleSelect">
+                    <option value="1.35">Standard</option>
+                    <option value="1">Compact</option>
+                    <option value="1.75">Sharp</option>
+                  </select>
+                </label>
+              </div>
+              <div class="switch-row">
+                <label class="switch">
+                  <input id="pdfPageNumbersToggle" type="checkbox">
+                  <span></span>
+                  Add page numbers
+                </label>
+              </div>
+              <div class="pdf-actions">
+                <button class="primary-action" id="pdfExportBtn" type="button">Export PDF</button>
+                <button class="secondary-action" id="pdfCompressBtn" type="button">Compress</button>
+                <button class="secondary-action" id="pdfSplitBtn" type="button">Split pages</button>
+                <button class="secondary-action" id="pdfExtractBtn" type="button">Extract selected</button>
+                <button class="secondary-action" id="pdfResetBtn" type="button">Reset</button>
+              </div>
+              <p class="status-line" id="pdfToolsStatus">Load a PDF to begin.</p>
+            </section>
+            <section class="pdf-panel">
+              <div class="section-heading compact">
+                <div>
+                  <p class="eyebrow">Pages</p>
+                  <h2>Drag pages to reorder</h2>
+                </div>
+                <div class="button-row">
+                  <button class="secondary-action" id="pdfRotateLeftBtn" type="button">Rotate left</button>
+                  <button class="secondary-action" id="pdfRotateRightBtn" type="button">Rotate right</button>
+                </div>
+              </div>
+              <div class="pdf-page-grid" id="pdfPageGrid"></div>
+              <div class="empty-state visible" id="pdfToolsEmpty">
+                <strong>No PDF loaded</strong>
+                <span>Select an existing PDF file to organize and export it locally.</span>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="screen" id="exportScreen" data-screen="export">
+          <div class="export-layout">
+            <section class="export-panel">
+              <h2>PDF output</h2>
+              <label>
+                <span>File name</span>
+                <input id="fileNameInput" type="text" value="docforge-scan.pdf">
+              </label>
+              <label>
+                <span>Margin</span>
+                <select id="marginSelect">
+                  <option value="24">Standard</option>
+                  <option value="8">Narrow</option>
+                  <option value="0">None</option>
+                </select>
+              </label>
+              <label>
+                <span>Orientation</span>
+                <select id="orientationSelect">
+                  <option value="auto">Auto</option>
+                  <option value="portrait">Portrait</option>
+                  <option value="landscape">Landscape</option>
+                </select>
+              </label>
+              <button class="primary-action full" id="downloadPdfBtn" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 19h14"/></svg>
+                Download PDF
+              </button>
+              <p class="status-line" id="exportStatus">Ready to create a PDF when pages are added.</p>
+            </section>
+            <section class="summary-panel">
+              <div class="summary-stat">
+                <span>Pages</span>
+                <strong id="summaryPages">0</strong>
+              </div>
+              <div class="summary-stat">
+                <span>Estimated image data</span>
+                <strong id="summarySize">0 MB</strong>
+              </div>
+              <div class="summary-stat">
+                <span>Scanner mode</span>
+                <strong id="summaryMode">HD doc</strong>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
