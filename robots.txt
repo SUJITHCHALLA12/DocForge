@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sujithchalla12.github.io/DocForge/sitemap.xml
